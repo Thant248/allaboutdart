@@ -1,10 +1,16 @@
 void main() {
-  Monkey m = Monkey();
-  m.fruit = "banana";
-  m.type = "monkey";
-  m.cute = false;
-  m.info();
-  m.isCute();
+  // Monkey m = Monkey();
+  // m.fruit = "banana";
+  // m.type = "monkey";
+  // m.cute = false;
+  // m.info();
+  // m.isCute();
+  // Cat c =  Cat();
+  // c.isCute();
+  // c.eat();
+
+
+    
 }
 
 // inheritance mean away sate khan tar
@@ -26,14 +32,26 @@ class Animal {
 
 class Monkey extends Animal {
   bool? cute;
-  String? cut ;
+  String? cut;
   void isCute() {
     print("This $type is not $cute");
   }
 }
 
-class Cat extends Monkey {
+class Cat extends Monkey {}
+
+//method override lote tal so tar parent class ka method ko yu thone tar phit par tal
+// inheritance lote lite lo ya lar tae har twae ko , ko ka ma lo chin tar shi yin pyin lo ya par tal
+class Mouse extends Cat {
+  @override
+  void isCute() {
+    print("this doesnt belong to parten this is from  child ");
+  }
+
+  @override
+  void eat() {
+    print("hi");
+  }
 }
-class Mouse{}
 
 // class Tiger extends  Monkey, Mouse{} //multi inheritance didnt allow in dart
