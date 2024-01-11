@@ -24,7 +24,7 @@ mixin Cloud {
   void cloud() => print("may be azure?");
 }
 
-class Language {
+mixin Language {
   // Language() {
   //   print("you need to learn japanese");
   // } default constructor write htr yin with so tae keyword nae multiple inheritance ko ma ya say par buu
@@ -32,12 +32,12 @@ class Language {
   void language() => print("you have to learn japanese");
 }
 
-class SystemLanguage {
+mixin SystemLanguage {
   void systemLanguage() => print(
       "you need to know php,laravel, ruby, rubyonrails, dart, flutter, docker, git lab... ");
 }
 
-class Others {
+mixin Others {
   void others() => print("ask someone else");
 }
 
