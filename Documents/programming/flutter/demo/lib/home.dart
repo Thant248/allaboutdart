@@ -25,6 +25,11 @@ class _MyWidgetState extends State<HomePage> {
         body: Center(
           child: Text(widget.bodyname),
         ),
+        bottomNavigationBar: TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Previous Page')),
       ),
     );
   }
