@@ -10,7 +10,7 @@ class Demo2 extends StatefulWidget {
   State<Demo2> createState() => _MyWidgetState();
 }
 
-const List<String> list = ["Channels", "Admin", "Employee", "Member"];
+const List<String> list = ["Channels", "Admin", "Employee", "Member", "Add"];
 
 class _MyWidgetState extends State<Demo2> {
   var dropDownValue = list.first;
@@ -46,6 +46,8 @@ class _MyWidgetState extends State<Demo2> {
         return const Icon(Icons.memory);
       case "Channels":
         return const Icon(Icons.wifi_channel);
+      case "Add":
+        return const Icon(Icons.add);
       default:
         throw Exception('Icon not found for value: $value');
     }
@@ -64,15 +66,17 @@ class _MyWidgetState extends State<Demo2> {
       case "Employee":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Employee()),
+          MaterialPageRoute(builder: (context) => const Employee()),
         );
         break;
       case "Member":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Member()),
+          MaterialPageRoute(builder: (context) => const  Member()),
         );
         break;
+      case "Add":
+
       default:
         throw Exception('Page not found for value: $selectedItem');
     }
