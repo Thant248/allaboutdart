@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class AddGoogle extends StatefulWidget {
+  const AddGoogle({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<AddGoogle> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _MyWidgetState extends State<AddGoogle> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+   return const Scaffold(
+      body: Text("This is Google"),
+    );
   }
 }

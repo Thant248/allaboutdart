@@ -1,4 +1,8 @@
 import 'package:demo/BottomNavigationBar.dart';
+import 'package:demo/Components/mentions/AddByMails.dart';
+import 'package:demo/Components/mentions/AddFromContect.dart';
+import 'package:demo/Components/mentions/AddFromGoogle.dart';
+import 'package:demo/Components/mentions/AddNewMessage.dart';
 import 'package:flutter/material.dart';
 
 class Dms extends StatelessWidget {
@@ -28,7 +32,7 @@ class Dms extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 300, 8.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(8.0, 200, 8.0, 8.0),
                 child: Image.asset(
                   "images/happy.jpg", // Make sure the image path is correct
                   width: 100, // Adjust the width as needed
@@ -57,17 +61,35 @@ class Dms extends StatelessWidget {
                               children: <Widget>[
                                 const Text("Invite people to join your team"),
                                 TextButton.icon(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AddContact()));
+                                  },
                                   icon: const Icon(Icons.people_alt),
                                   label: const Text("Add from Contacts"),
                                 ),
                                 TextButton.icon(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AddGoogle()));
+                                    },
                                     icon: const Icon(Icons.send),
                                     label:
                                         const Text("Add from Google Contacts")),
                                 TextButton.icon(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AddMails()));
+                                    },
                                     icon: const Icon(Icons.mail),
                                     label: const Text("Add from Emails")),
                               ],
@@ -82,7 +104,10 @@ class Dms extends StatelessWidget {
       ),
       bottomNavigationBar: const BottomNavigate(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AddMessage()));
+        },
         child: const Icon(Icons.edit),
       ),
     );

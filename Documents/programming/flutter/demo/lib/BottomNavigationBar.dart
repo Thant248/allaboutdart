@@ -1,8 +1,8 @@
 import 'package:demo/Components/generalNavigation/dms.dart';
-import 'package:demo/Components/generalNavigation/home.dart';
 import 'package:demo/Components/generalNavigation/mentions.dart';
 import 'package:demo/Components/generalNavigation/search.dart';
 import 'package:demo/Components/generalNavigation/you.dart';
+import 'package:demo/home.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigate extends StatefulWidget {
@@ -29,8 +29,7 @@ class _MyWidgetState extends State<BottomNavigate> {
         NavigationDestination(
             icon: Icon(Icons.alternate_email), label: "Mentions"),
         NavigationDestination(icon: Icon(Icons.search), label: "Search"),
-        NavigationDestination(
-            icon: Icon(Icons.add_ic_call_sharp), label: "You"),
+        NavigationDestination(icon: Icon(Icons.face), label: "You"),
       ],
     );
   }
@@ -38,33 +37,34 @@ class _MyWidgetState extends State<BottomNavigate> {
 
 void _navigateToPage(BuildContext context, int selectedItem) {
   switch (selectedItem) {
-    case 1:
+    case 0:
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const Home(),
+          builder: (context) =>
+              const HomePage(name: 'Admin', bodyname: 'This is Admin Page'),
         ),
       );
       break;
-    case 2:
+    case 1:
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const Dms()),
       );
       break;
-    case 3:
+    case 2:
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const Mentions()),
       );
       break;
-    case 4:
+    case 3:
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const Search()),
       );
       break;
-    case 5:
+    case 4:
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const You()),

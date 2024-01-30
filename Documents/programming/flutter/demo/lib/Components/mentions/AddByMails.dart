@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class AddMails extends StatefulWidget {
+  const AddMails({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<AddMails> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _MyWidgetState extends State<AddMails> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Text("This is Mails"),
+    );
   }
 }

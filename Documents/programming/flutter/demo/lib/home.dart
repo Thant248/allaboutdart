@@ -1,6 +1,5 @@
 import 'package:demo/BottomNavigationBar.dart';
-import 'package:demo/Components/HomeNavigations/AddDescription.dart';
-import 'package:demo/Components/HomeNavigations/AddPeopple.dart';
+import 'package:demo/Components/generalNavigation/home.dart';
 
 import 'package:flutter/material.dart';
 
@@ -23,7 +22,6 @@ class _MyWidgetState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-   
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -41,76 +39,7 @@ class _MyWidgetState extends State<HomePage> {
               iconTheme: const IconThemeData(),
               actions: [],
             ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Center(
-                        child: RichText(
-                          text: const TextSpan(
-                              text: "Welcome !",
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    children: [
-                      Center(
-                        child: RichText(
-                            text: TextSpan(text: text, spellOut: true,)),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          TextButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (c) => const AddDescription()),
-                              );
-                            },
-                            icon: const Icon(
-                                Icons.add), // Replace with your desired icon
-                            label: const Text("Add Description"),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      Column(
-                        children: [
-                          TextButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (c) => const AddPeople()),
-                              );
-                            },
-                            icon: const Icon(
-                                Icons.man), // Replace with your desired icon
-                            label: const Text("Add People"),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            body: const Home(),
             bottomNavigationBar: const BottomNavigate()));
   }
 }
-
-

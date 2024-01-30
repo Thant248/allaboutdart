@@ -5,6 +5,10 @@ class Search extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return  Scaffold(
+      body: Center(
+        child:   TextButton(onPressed: () => Navigator.pop(context) , child:  Text('Search')),
+      ),
+    );
   }
 }
