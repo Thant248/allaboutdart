@@ -1,3 +1,4 @@
+import 'package:demo/Components/generalNavigation/you.dart';
 import 'package:flutter/material.dart';
 
 class Invitations extends StatefulWidget {
@@ -11,10 +12,28 @@ class _MyWidgetState extends State<Invitations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Invitations')),
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const You()));
+            },
+            icon: const Icon(Icons.close)),
+        title: Row(
+          children: [
+            TextButton(onPressed: () {}, child: Text("Invitations to connect")),
+            RichText(
+                text: TextSpan(children: [
+              WidgetSpan(
+                  child: TextButton(
+                      onPressed: () {}, child: const Text("Learn More")))
+            ]))
+          ],
+        ),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {}, icon: const Icon(Icons.group_add_rounded))
+        ],
       ),
     );
   }

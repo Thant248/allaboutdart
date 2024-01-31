@@ -1,5 +1,6 @@
 import 'package:demo/BottomNavigationBar.dart';
 import 'package:demo/Components/generalNavigation/home.dart';
+import 'package:demo/main.dart';
 
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,8 @@ class _MyWidgetState extends State<HomePage> {
             appBar: AppBar(
               title: TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const MyApp()));
                 },
                 child: Text(
                   widget.name,

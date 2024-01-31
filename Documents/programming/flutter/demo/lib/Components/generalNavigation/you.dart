@@ -32,26 +32,30 @@ class _MyWidgetState extends State<You> {
         children: [
           Row(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: CircleAvatar(
-                  backgroundImage: const AssetImage("images/profile.jpg"),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _click();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: condition ? Colors.green : Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      minimumSize: Size(10, 5), // Set the minimum size here
+                  backgroundImage: AssetImage("images/profile.jpg"),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0.8, 10, 6, 10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _click();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: condition ? Colors.green : Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    child: const Icon(
-                      Icons.circle,
-                      color: Colors.white,
-                      size: 12.0,
-                    ),
+                    fixedSize: const Size(5, 5),
+                    minimumSize: Size(3, 3), // Set the minimum size here
+                  ),
+                  child: const Icon(
+                    Icons.circle,
+                    color: Colors.white,
+                    size: 12.0,
                   ),
                 ),
               ),
@@ -60,7 +64,7 @@ class _MyWidgetState extends State<You> {
                 children: [
                   Text(
                     'Thant Sin',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -135,7 +139,7 @@ class _MyWidgetState extends State<You> {
               ),
             ],
           ),
-          Divider(),
+          const Divider(),
           Column(
             children: [
               Row(
