@@ -1,239 +1,463 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+const routeHome = '/';
+const routeSettings = '/settings';
+const routePrefixDeviceSetup = '/setup/';
+const routeDeviceSetupStart = '/setup/$routeDeviceSetupStartPage';
+const routeDeviceSetupStartPage = 'find_devices';
+const routeDeviceSetupSelectDevicePage = 'select_device';
+const routeDeviceSetupConnectingPage = 'connecting';
+const routeDeviceSetupFinishedPage = 'finished';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MaterialApp(
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.blue,
+        ),
+      ),
+      onGenerateRoute: (settings) {
+        late Widget page;
+        if (settings.name == routeHome) {
+          page = const HomeScreen();
+        } else if (settings.name == routeSettings) {
+          page = const SettingsScreen();
+        } else if (settings.name!.startsWith(routePrefixDeviceSetup)) {
+          final subRoute =
+              settings.name!.substring(routePrefixDeviceSetup.length);
+          page = SetupFlow(
+            setupPageRoute: subRoute,
+          );
+        } else {
+          throw Exception('Unknown route: ${settings.name}');
+        }
+
+        return MaterialPageRoute<dynamic>(
+          builder: (context) {
+            return page;
+          },
+          settings: settings,
+        );
+      },
+      debugShowCheckedModeBanner: false,
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+@immutable
+class SetupFlow extends StatefulWidget {
+  static SetupFlowState of(BuildContext context) {
+    return context.findAncestorStateOfType<SetupFlowState>()!;
+  }
+
+  const SetupFlow({
+    super.key,
+    required this.setupPageRoute,
+  });
+
+  final String setupPageRoute;
+
+  @override
+  SetupFlowState createState() => SetupFlowState();
+}
+
+class SetupFlowState extends State<SetupFlow> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _onDiscoveryComplete() {
+    _navigatorKey.currentState!.pushNamed(routeDeviceSetupSelectDevicePage);
+  }
+
+  void _onDeviceSelected(String deviceId) {
+    _navigatorKey.currentState!.pushNamed(routeDeviceSetupConnectingPage);
+  }
+
+  void _onConnectionEstablished() {
+    _navigatorKey.currentState!.pushNamed(routeDeviceSetupFinishedPage);
+  }
+
+  Future<void> _onExitPressed() async {
+    final isConfirmed = await _isExitDesired();
+
+    if (isConfirmed && mounted) {
+      _exitSetup();
+    }
+  }
+
+  Future<bool> _isExitDesired() async {
+    return await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Are you sure?'),
+                content: const Text(
+                    'If you exit device setup, your progress will be lost.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    child: const Text('Leave'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text('Stay'),
+                  ),
+                ],
+              );
+            }) ??
+        false;
+  }
+
+  void _exitSetup() {
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Namer App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+
+        if (await _isExitDesired() && context.mounted) {
+          _exitSetup();
+        }
+      },
+      child: Scaffold(
+        appBar: _buildFlowAppBar(),
+        body: Navigator(
+          key: _navigatorKey,
+          initialRoute: widget.setupPageRoute,
+          onGenerateRoute: _onGenerateRoute,
         ),
-        home: MyHomePage(),
       ),
+    );
+  }
+
+  Route _onGenerateRoute(RouteSettings settings) {
+    late Widget page;
+    switch (settings.name) {
+      case routeDeviceSetupStartPage:
+        page = WaitingPage(
+          message: 'Searching for nearby bulb...',
+          onWaitComplete: _onDiscoveryComplete,
+        );
+      case routeDeviceSetupSelectDevicePage:
+        page = SelectDevicePage(
+          onDeviceSelected: _onDeviceSelected,
+        );
+      case routeDeviceSetupConnectingPage:
+        page = WaitingPage(
+          message: 'Connecting...',
+          onWaitComplete: _onConnectionEstablished,
+        );
+      case routeDeviceSetupFinishedPage:
+        page = FinishedPage(
+          onFinishPressed: _exitSetup,
+        );
+    }
+
+    return MaterialPageRoute<dynamic>(
+      builder: (context) {
+        return page;
+      },
+      settings: settings,
+    );
+  }
+
+  PreferredSizeWidget _buildFlowAppBar() {
+    return AppBar(
+      leading: IconButton(
+        onPressed: _onExitPressed,
+        icon: const Icon(Icons.chevron_left),
+      ),
+      title: const Text('Bulb Setup'),
     );
   }
 }
 
-class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
+class SelectDevicePage extends StatelessWidget {
+  const SelectDevicePage({
+    super.key,
+    required this.onDeviceSelected,
+  });
 
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
+  final void Function(String deviceId) onDeviceSelected;
 
-  var favorites = <WordPair>[];
-
-  void toggleFavorites() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
-  }
-}
-
-class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          SafeArea(
-            child: NavigationRail(
-              extended: false,
-              destinations: [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text('Home'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.favorite),
-                  label: Text('Favorites'),
-                ),
-              ],
-              selectedIndex: 0,
-              onDestinationSelected: (value) {
-                print('selected: $value');
-              },
-            ),
-          ),
-          Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: GeneratorPage(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class GeneratorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BigCard(pair: pair),
-          SizedBox(height: 10),
-          Row(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorites();
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
+              Text(
+                'Select a nearby device:',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith((states) {
+                      return const Color(0xFF222222);
+                    }),
+                  ),
+                  onPressed: () {
+                    onDeviceSelected('22n483nk5834');
+                  },
+                  child: const Text(
+                    'Bulb 22n483nk5834',
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-// class _MyHomePageState extends State<MyHomePage> {
-//   var selectedIndex = 0;
+class WaitingPage extends StatefulWidget {
+  const WaitingPage({
+    super.key,
+    required this.message,
+    required this.onWaitComplete,
+  });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     Widget page;
-//     switch (selectedIndex) {
-//       case 0:
-//         page = GeneratorPage();
-//         break;
-//       case 1:
-//         page = Placeholder();
-//         break;
-//       default:
-//         throw UnimplementedError('no widget for $selectedIndex');
-//     }
+  final String message;
+  final VoidCallback onWaitComplete;
 
-//     return Scaffold(
-//       body: Row(
-//         children: [
-//           SafeArea(
-//             child: NavigationRail(
-//               extended: false,
-//               destinations: [
-//                 NavigationRailDestination(
-//                   icon: Icon(Icons.home),
-//                   label: Text('Home'),
-//                 ),
-//                 NavigationRailDestination(
-//                   icon: Icon(Icons.favorite),
-//                   label: Text('Favorites'),
-//                 ),
-//               ],
-//               selectedIndex: selectedIndex,
-//               onDestinationSelected: (value) {
-//                 setState(() {
-//                   selectedIndex = value;
-//                 });
-//               },
-//             ),
-//           ),
-//           Expanded(
-//             child: Container(
-//               color: Theme.of(context).colorScheme.primaryContainer,
-//               child: page,  // ← Here.
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  State<WaitingPage> createState() => _WaitingPageState();
+}
 
-class FavoritesPage extends StatelessWidget {
+class _WaitingPageState extends State<WaitingPage> {
+  @override
+  void initState() {
+    super.initState();
+    _startWaiting();
+  }
+
+  Future<void> _startWaiting() async {
+    await Future<dynamic>.delayed(const Duration(seconds: 3));
+
+    if (mounted) {
+      widget.onWaitComplete();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    if (appState.favorites.isEmpty) {
-      return Center(
-        child: Text('No favorites yet.'),
-      );
-    }
-
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        for (var pair in appState.favorites)
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 32),
+              Text(widget.message),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class FinishedPage extends StatelessWidget {
+  const FinishedPage({
+    super.key,
+    required this.onFinishPressed,
+  });
+
+  final VoidCallback onFinishPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 250,
+                height: 250,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF222222),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.lightbulb,
+                    size: 175,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                'Bulb added!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.resolveWith((states) {
+                    return const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12);
+                  }),
+                  backgroundColor: MaterialStateColor.resolveWith((states) {
+                    return const Color(0xFF222222);
+                  }),
+                  shape: MaterialStateProperty.resolveWith((states) {
+                    return const StadiumBorder();
+                  }),
+                ),
+                onPressed: onFinishPressed,
+                child: const Text(
+                  'Finish',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+@immutable
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 250,
+                height: 250,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF222222),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.lightbulb,
+                    size: 175,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                'Add your first bulb',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(routeDeviceSetupStart);
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text('Welcome'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Navigator.pushNamed(context, routeSettings);
+          },
+        ),
       ],
     );
   }
 }
 
-class BigCard extends StatelessWidget {
-  const BigCard({
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({
     super.key,
-    required this.pair,
   });
-
-  final WordPair pair;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    // ↓ Add this.
-    final style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        // ↓ Change this line.
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: "${pair.first}, ${pair.second}",
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(8, (index) {
+            return Container(
+              width: double.infinity,
+              height: 54,
+              margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color(0xFF222222),
+              ),
+            );
+          }),
         ),
       ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      title: const Text('Settings'),
     );
   }
 }

@@ -109,10 +109,10 @@ class _MyWidgetState extends State<You> {
                           builder: (context) => const Noti(),
                         ),
                       );
-                    },
-                    icon: const Icon(Icons.notification_add_rounded),
+                    },  icon: const Icon(Icons.notification_add_rounded),
                     style: const ButtonStyle(
                       alignment: Alignment.centerLeft,
+                  
                     ),
                     label: const Text('Pause Notifications'),
                   ),
