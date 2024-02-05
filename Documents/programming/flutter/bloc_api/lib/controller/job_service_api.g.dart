@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'apiservice.dart';
+part of 'job_service_api.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'apiservice.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _ApiService implements ApiService {
-  _ApiService(
+class _JobApiService implements JobApiService {
+  _JobApiService(
     this._dio, {
     this.baseUrl,
   }) {
@@ -21,13 +21,13 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<List<Contact>> getContact() async {
+  Future<List<Job>> getAllJobs() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Contact>>(Options(
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<Job>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -44,20 +44,20 @@ class _ApiService implements ApiService {
               baseUrl,
             ))));
     var value = _result.data!
-        .map((dynamic i) => Contact.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => Job.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }
 
   @override
-  Future<Contact> addContact(Contact contact) async {
+  Future<Job> postJobs(Job job) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(contact.toJson());
+    _data.addAll(job.toJson());
     final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Contact>(Options(
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Job>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -73,56 +73,25 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = Contact.fromJson(_result.data!);
+    final value = Job.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<Contact> updateContact(
-    dynamic id,
-    Contact contact,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(contact.toJson());
-    final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Contact>(Options(
-      method: 'PUT',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '${id}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = Contact.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
-  Future<Contact> deleteContact(int id) async {
+  Future<Job> deleteJobs(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Contact>(Options(
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Job>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '${id}',
+              '/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -131,7 +100,7 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = Contact.fromJson(_result.data!);
+    final value = Job.fromJson(_result.data!);
     return value;
   }
 
