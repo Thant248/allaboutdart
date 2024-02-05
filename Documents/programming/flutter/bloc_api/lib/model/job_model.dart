@@ -4,7 +4,7 @@ class Job {
   String? job;
   String? id;
 
-  Job({this.name, this.age, this.job, this.id});
+  Job({required this.name,required this.age,required this.job, this.id});
 
   Job.fromJson(Map<String, dynamic> json) {
     name = json['name'];

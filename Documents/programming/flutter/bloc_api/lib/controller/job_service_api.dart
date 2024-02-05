@@ -16,4 +16,10 @@ abstract class JobApiService {
 
   @DELETE('/{id}')
   Future<Job> deleteJobs(@Path() String id);
+
+  @PUT('/{id}')
+  Future<Job> updateJobs(@Path() String id, @Body() Job job);
+
+  @GET('/{id}')
+  Future<Job> getJobById(@Path() String id);
 }

@@ -1,5 +1,6 @@
 import 'package:bloc_api/controller/job_service_api.dart';
 import 'package:bloc_api/model/job_model.dart';
+import 'package:bloc_api/screens/edit_screen.dart';
 import 'package:bloc_api/screens/post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -51,15 +52,28 @@ class _MyWidgetState extends State<HomeScreen> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PostScreen(),
-                ));
-          },
-          child: const Icon(Icons.add)),
+      floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <FloatingActionButton>[
+            FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PostScreen(),
+                      ));
+                },
+                child: const Icon(Icons.add)),
+            FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditScreen(),
+                      ));
+                },
+                child: const Icon(Icons.edit_note)),
+          ]),
     );
   }
 
