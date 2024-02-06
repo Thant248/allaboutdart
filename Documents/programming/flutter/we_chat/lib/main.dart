@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:we_chat/screen/home.dart';
-
 void main(List<String> args) {
-  runApp(const MyApp());
+  runApp(app)
 }
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const Home(),
-    );
+    return const Placeholder();
   }
 }

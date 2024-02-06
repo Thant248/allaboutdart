@@ -18,63 +18,76 @@ class _MyWidgetState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Hello Job'),
-        leading: const Icon(Icons.home),
-      ),
-      body: FutureBuilder<List<Job>>(
-        future: _apiService.getAllJobs(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child:
-                    CircularProgressIndicator()); // Show a loading indicator while data is being fetched
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Text('No data available');
-          } else {
-            // Display your data here using snapshot.data
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                    title: Text(snapshot.data![index].job.toString()),
-                    leading: Text(snapshot.data![index].name.toString()),
-                    subtitle: Text(snapshot.data![index].age.toString()),
-                    onTap: () => _deleteJob(snapshot.data![index].id.toString())
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Hello Job'),
+          leading: const Icon(Icons.home),
+        ),
+        body: FutureBuilder<List<Job>>(
+          future: _apiService.getAllJobs(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child:
+                      CircularProgressIndicator()); // Show a loading indicator while data is being fetched
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Text('No data available');
+            } else {
+              // Display your data here using snapshot.data
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Job job = snapshot.data![index];
 
-                    // Add more fields as needed
-                    );
-              },
-            );
-          }
-        },
-      ),
-      floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <FloatingActionButton>[
-            FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PostScreen(),
-                      ));
+                  return ListTile(
+                    title: Text(job.job.toString()),
+                    leading: Text(job.name.toString()),
+                    subtitle: Text(job.age.toString()),
+                    trailing: PopupMenuButton(onSelected: (value) {
+                      if (value == 'edit') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditScreen(job: snapshot.data![index]),
+                            ));
+                      } else if (value == 'delete') {
+                        //delete and remove the list
+                        _deleteJob(snapshot.data![index].id.toString());
+                      }
+                    }, itemBuilder: (context) {
+                      return [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text("Edit"),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text("Delete"),
+                        )
+                      ];
+                    }),
+                  );
                 },
-                child: const Icon(Icons.add)),
-            FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const EditScreen(),
-                      ));
-                },
-                child: const Icon(Icons.edit_note)),
-          ]),
-    );
+              );
+            }
+          },
+        ),
+        floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <FloatingActionButton>[
+              FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PostScreen(),
+                        ));
+                  },
+                  child: const Icon(Icons.add)),
+            ]));
   }
 
   Future<void> _deleteJob(String jobId) async {

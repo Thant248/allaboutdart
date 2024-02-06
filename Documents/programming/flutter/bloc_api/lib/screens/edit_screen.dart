@@ -1,29 +1,28 @@
+import 'dart:js';
+
 import 'package:bloc_api/controller/job_service_api.dart';
 import 'package:bloc_api/main.dart';
 import 'package:bloc_api/model/job_model.dart';
+import 'package:bloc_api/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 class EditScreen extends StatefulWidget {
-  const EditScreen({Key? key}) : super(key: key);
+  final Job job;
+
+  const EditScreen({Key? key, required this.job}) : super(key: key);
 
   @override
   State<EditScreen> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<EditScreen> {
-  late Future<Job> _futerjob;
-  // If you don't need the controller, you can remove it
-  final TextEditingController _controller = TextEditingController();
+  // Initialize controllers with existing data
+  final TextEditingController _controllerName = TextEditingController();
+  final TextEditingController _controllerAge = TextEditingController();
+  final TextEditingController _controllerJob = TextEditingController();
 
   JobApiService _apiService = JobApiService(Dio());
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _futerjob = _apiService.getJobById('10');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,42 +43,68 @@ class _MyWidgetState extends State<EditScreen> {
         ),
         body: Container(
           alignment: Alignment.center,
-          child: FutureBuilder<Job>(
-            future: _futerjob,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(snapshot.data!.name.toString()),
-                      // If you want to allow editing, use the TextField with a controller
-                      TextField(
-                        controller: _controller,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter Your Name',
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Use the controller.text for the updated name
-                          Job updatedJob = Job(
-                            id: snapshot.data!.id,
-                            name: _controller.text, // Use the updated name
-                            age: snapshot.data!.age,
-                            job: snapshot.data!.job,
-                          );
-                        },
-                        child: const Text('Update Data'),
-                      ),
-                    ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Display the existing data
+              Text(widget.job.name.toString()),
+              TextField(
+                controller: _controllerName,
+                decoration: const InputDecoration(
+                  hintText: 'Enter Name',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(widget.job.age.toString()),
+              TextField(
+                controller: _controllerAge,
+                decoration: const InputDecoration(
+                  hintText: 'Enter Age',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(widget.job.job.toString()),
+              TextField(
+                controller: _controllerJob,
+                decoration: const InputDecoration(
+                  hintText: 'Enter Job',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  // Capture edited data from controllers
+                  Job updatedJob = Job(
+                    id: widget.job.id,
+                    name: _controllerName.text,
+                    age: _controllerAge.text,
+                    job: _controllerJob.text,
                   );
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-              }
-              return const CircularProgressIndicator();
-            },
+
+                  try {
+                    await _updateJob(updatedJob);
+                    // Only navigate if the update is successful
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  } catch (e) {
+                    // Handle errors if the update fails
+                    // You may want to show an error message to the user
+                    print('Error updating job: $e');
+                  }
+                },
+                child: const Text('Update Data'),
+              ),
+            ],
           ),
         ),
       ),
@@ -95,7 +120,7 @@ class _MyWidgetState extends State<EditScreen> {
     } catch (e) {
       print('Error updating job: $e');
       // Provide feedback to the user about the error
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
         SnackBar(
           content: Text('Failed to update job: $e'),
           backgroundColor: Colors.red,

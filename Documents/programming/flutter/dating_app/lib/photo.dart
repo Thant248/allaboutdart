@@ -1,29 +1,53 @@
-import 'package:dating_app/body.dart';
+import 'dart:convert';
+import 'package:dating_app/tag.dart';
 import 'package:flutter/material.dart';
 
-class Photo extends StatefulWidget {
-  const Photo({super.key});
-
+class channelList extends StatefulWidget {
   @override
-  State<Photo> createState() => _MyWidgetState();
+  _createChanneLList createState() => _createChanneLList();
 }
 
-class _MyWidgetState extends State<Photo> {
+class _createChanneLList extends State<channelList> {
+  String arrayObjsText =
+      '{"tags": [{"channelName": "dart", "statusFlag": true}, {"channelName": "flutter", "statusFlag": false}, {"channelName": "json", "statusFlag": false}]}';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(onPressed: (){}, icon: const Icon(Icons.ac_unit_sharp))
-        ],
-        backgroundColor: Colors.lightBlue,
-        title: const Text(
-          'Welcome',
-          style: TextStyle(color: Colors.black),
+    var tagObjsJson = jsonDecode(arrayObjsText)['tags'] as List;
+    List<Tag> tagObjs =
+        tagObjsJson.map((tagJson) => Tag.fromJson(tagJson)).toList();
+
+    return Column(
+      children: [
+        ExpansionTile(
+          title: const Text("Channels"),
+          children: _buildExpandableContent(tagObjs),
         ),
-      ),
-      body: const Body(),
+        ExpansionTile(
+          title: const Text("Channels"),
+          children: _buildExpandableContent(tagObjs),
+        ),
+        ExpansionTile(
+          title: const Text("Channels"),
+          children: _buildExpandableContent(tagObjs),
+        ),
+      ],
     );
-    
+  }
+
+  List<Widget> _buildExpandableContent(List<Tag> channels) {
+    List<Widget> columnContent = [];
+    for (var channel in channels) {
+      columnContent.add(
+        ListTile(
+          leading: channel.statusFlag == true
+              ? const Icon(Icons.tag)
+              : const Icon(Icons.lock),
+          title:
+              Text(channel.channelName, style: const TextStyle(fontSize: 18.0)),
+        ),
+      );
+    }
+    return columnContent;
   }
 }
