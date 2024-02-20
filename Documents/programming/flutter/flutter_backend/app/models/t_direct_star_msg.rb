@@ -1,2 +1,0 @@
-class TDirectStarMsg < ApplicationRecord
-end

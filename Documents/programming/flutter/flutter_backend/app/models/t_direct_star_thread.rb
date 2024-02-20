@@ -1,2 +1,0 @@
-class TDirectStarThread < ApplicationRecord
-end

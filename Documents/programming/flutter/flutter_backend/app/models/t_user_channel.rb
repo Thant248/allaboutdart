@@ -1,2 +1,0 @@
-class TUserChannel < ApplicationRecord
-end
