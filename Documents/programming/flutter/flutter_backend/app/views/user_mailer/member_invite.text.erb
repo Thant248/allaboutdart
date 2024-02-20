@@ -1,0 +1,5 @@
+Hi <%= @i_user.name %>,
+
+Welcome to the Slack App! Click on the link below to confirm your account:
+
+<%= confirminvitation_url(email: @i_user.email, workspaceid: @i_workspace.id, channelid: @i_channel.id) %>
