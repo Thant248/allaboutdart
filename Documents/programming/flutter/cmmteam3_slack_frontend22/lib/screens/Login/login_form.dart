@@ -222,18 +222,25 @@ class _LoginFormState extends State<LoginForm> {
                                         borderRadius:
                                             BorderRadius.circular(16)),
                                     backgroundColor: Colors.transparent,
-                                    child: const Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 32),
-                                          child: ProgressionBar(
-                                              imageName: "loading.json",
-                                              height: 150,
-                                              size: 150),
-                                        ),
-                                      ],
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.6,
+                                      child: const Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 32),
+                                            child: ProgressionBar(
+                                                imageName: "loading.json",
+                                                height: 150,
+                                                size: 150),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   onWillPop: () async => false);

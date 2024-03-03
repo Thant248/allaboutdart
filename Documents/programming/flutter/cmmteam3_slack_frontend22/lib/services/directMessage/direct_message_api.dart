@@ -9,37 +9,36 @@ import 'package:http/http.dart' as http;
 class DirectMessageService {
   late StreamController<DirectMessages> _controller;
 
-  Stream<DirectMessages> getAllDirectMessages(int userId) {
+  Stream<DirectMessages> getAllDirectMessages(int userId) async* {
     _controller = StreamController<DirectMessages>();
 
-    final String url = "http://localhost:8001/directmsgs/$userId";
+    final String url = "http://localhost:8001/show/$userId";
 
-    AuthController().getToken().then((token) async {
-      try {
-        var response = await http.get(Uri.parse(url), headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        });
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> data = json.decode(response.body);
-          DirectMessages directMessage = DirectMessages.fromJson(data);
-          print(directMessage.tDirectMessage!.directmsg.toString());
-          _controller.add(directMessage);
-          _controller.close();
-        } else {
-          print("Direct Messages Data has not been found");
-          _controller.addError(
-              "Failed to fetch session data: ${response.statusCode} - ${response.reasonPhrase}");
-          _controller.close();
-        }
-      } catch (e) {
-        print(e);
-        _controller.addError(e);
-        _controller.close();
+    try {
+      final token = await AuthController().getToken();
+      var response = await http.get(Uri.parse(url), headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      });
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        DirectMessages directMessage = DirectMessages.fromJson(data);
+        _controller.add(directMessage);
+        print("email");
+        print(directMessage.mUser!.email.toString());
+      } else {
+        print("Direct Messages Data has not been found");
+        _controller.addError(
+            "Failed to fetch session data: ${response.statusCode} - ${response.reasonPhrase}");
       }
-    });
+    } catch (e) {
+      print(e);
+      _controller.addError(e);
+    } finally {
+      _controller.close(); // Close the stream after all events have been added
+    }
 
-    return _controller.stream;
+    yield* _controller.stream;
   }
 
   Future<void> sendDirectMessage(int receiverUserId, String message) async {
