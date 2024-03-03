@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/componnets/Nav.dart';
 import 'package:flutter_frontend/componnets/already_have_an_account_acheck.dart';
 import 'package:flutter_frontend/constants.dart';
-import 'package:flutter_frontend/screens/Login/login_screen.dart';
+import 'package:flutter_frontend/screens/Login/login_form.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
 
 class SignUpForm extends StatelessWidget {
@@ -31,10 +32,10 @@ class SignUpForm extends StatelessWidget {
             _password!,
             _passwordConfirmation!,
           );
-          
+
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()),
+            MaterialPageRoute(builder: (context) => const LoginForm()),
           );
         } catch (e) {
           print('Error creating user: $e');
@@ -202,7 +203,7 @@ class SignUpForm extends StatelessWidget {
             press: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginForm()),
               );
             },
           ),

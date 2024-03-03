@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_frontend/model/SessionState.dart';
 import 'package:flutter_frontend/model/SessionStore.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController {
   Future<String> loginUser(
-      String name, String password, String workspaceName) async {
+    String name,
+    String password,
+    String workspaceName,
+  ) async {
     final url = 'http://127.0.0.1:8001/login';
     try {
       final response = await http.post(
@@ -26,11 +30,9 @@ class AuthController {
         final Map<String, dynamic> data = json.decode(response.body);
         final String token = data['token'];
         await saveToken(token.toString());
-        // await mainPage();
-        print(token);
+
         return token;
       } else {
-        print("Error: ${response.statusCode} - ${response.reasonPhrase}");
         throw Exception(
             "Failed to login: ${response.statusCode} - ${response.reasonPhrase}");
       }

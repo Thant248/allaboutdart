@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/componnets/Nav.dart';
+import 'package:flutter_frontend/componnets/background.dart';
 import 'package:flutter_frontend/model/SessionStore.dart';
 import 'package:flutter_frontend/model/dataInsert/user_management_store.dart';
 import 'package:flutter_frontend/progression.dart';
@@ -31,14 +32,14 @@ class _UserManagementState extends State<UserManagement> {
     // int userLength = SessionStore.sessionData!.mUsers!.length.toInt();
     int? userId;
 
-    
     return Scaffold(
       backgroundColor: const Color(0xFF92AFE6),
       appBar: AppBar(
         backgroundColor: const Color(0xFF3860EF),
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const Nav()));
           },
           child: const Icon(Icons.arrow_back),
         ),
@@ -110,6 +111,7 @@ class _UserManagementState extends State<UserManagement> {
                               userId = userIds;
                             });
                             await userManagementService.deactivateUser(userId!);
+                            // ignore: use_build_context_synchronously
                             Navigator.push(
                               context,
                               MaterialPageRoute(

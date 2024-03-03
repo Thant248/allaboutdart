@@ -128,9 +128,7 @@ class _MemberInvitationState extends State<MemberInvitation> {
                       child: Text(
                         SessionStore.sessionData!.mChannels![index].channelName
                             .toString(),
-                        style: TextStyle(
-                            color:
-                                selected[index] ? Colors.green : Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   );

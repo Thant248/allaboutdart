@@ -162,14 +162,49 @@ class _WorkHomeState extends State<WorkHome> {
                           const SizedBox(height: 6),
                           GestureDetector(
                             onTap: () async {
-                              await UserManagementService().getAllUsers();
-                              // ignore: use_build_context_synchronously
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const UserManagement(),
-                                ),
-                              );
+                              try {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return WillPopScope(
+                                        child: Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16)),
+                                          backgroundColor: Colors.transparent,
+                                          child: const Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 32),
+                                                child: ProgressionBar(
+                                                    imageName: "loading.json",
+                                                    height: 150,
+                                                    size: 150),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        onWillPop: () async => true);
+                                  },
+                                );
+                                await UserManagementService().getAllUsers();
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const UserManagement(),
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text("fail to go userManager", style: TextStyle(color: Colors.red),)));
+                              }
                             },
                             child: const ListTile(
                               leading: Icon(Icons.people),

@@ -45,7 +45,8 @@ class _GroupStarState extends State<GroupStarWidget> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const ProgressionBar(
-                  imageName: 'loading.json',height: 200,
+                  imageName: 'loading.json',
+                  height: 200,
                   size: 200,
                 );
               } else if (snapshot.hasError) {
@@ -54,14 +55,25 @@ class _GroupStarState extends State<GroupStarWidget> {
                 );
               } else if (snapshot.data!.groupStar == null ||
                   snapshot.data!.groupStar!.isEmpty) {
-                return const ProgressionBar(imageName: 'dataSending.json',height: 200,
-                  size: 200,);
+                return LiquidPullToRefresh(
+                  onRefresh: _refresh,
+                  color: Colors.blue.shade100,
+                  animSpeedFactor: 200,
+                  showChildOpacityTransition: true,
+                  child: Scaffold(
+                    body: const ProgressionBar(
+                      imageName: 'nodatahasFounded.json',
+                      height: 200,
+                      size: 200,
+                    ),
+                  ),
+                );
               } else {
                 return LiquidPullToRefresh(
-                   onRefresh: _refresh,
-                    color: Colors.blue.shade100,
-                     animSpeedFactor: 200,
-                     showChildOpacityTransition: true,
+                  onRefresh: _refresh,
+                  color: Colors.blue.shade100,
+                  animSpeedFactor: 200,
+                  showChildOpacityTransition: true,
                   child: Column(
                     children: [
                       Expanded(
@@ -69,12 +81,20 @@ class _GroupStarState extends State<GroupStarWidget> {
                           shrinkWrap: true,
                           itemCount: snapshot.data!.groupStar!.length,
                           itemBuilder: (context, index) {
-                            String name = snapshot.data!.groupStar![index].name.toString();
-                            String groupmsg = snapshot.data!.groupStar![index].groupmsg.toString();
-                            String channelName = snapshot.data!.groupStar![index].channelName.toString();
-                            String dateFormat = snapshot.data!.groupStar![index].createdAt.toString();
+                            String name = snapshot.data!.groupStar![index].name
+                                .toString();
+                            String groupmsg = snapshot
+                                .data!.groupStar![index].groupmsg
+                                .toString();
+                            String channelName = snapshot
+                                .data!.groupStar![index].channelName
+                                .toString();
+                            String dateFormat = snapshot
+                                .data!.groupStar![index].createdAt
+                                .toString();
                             DateTime dateTime = DateTime.parse(dateFormat);
-                            String time = DateFormat('yyyy-MM-dd').format(dateTime);
+                            String time =
+                                DateFormat('yyyy-MM-dd').format(dateTime);
                             return Card(
                               color: Colors.blueGrey,
                               child: ListTile(
@@ -82,21 +102,33 @@ class _GroupStarState extends State<GroupStarWidget> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                    color: Colors.brown.shade400,
-                                    borderRadius: BorderRadius.circular(25),
-                                    border: Border(
-                                      top: BorderSide(color: Colors.white),
-                                      bottom: BorderSide(color:Colors.white)
-                                    )
-                                  ),
+                                      color: Colors.brown.shade400,
+                                      borderRadius: BorderRadius.circular(25),
+                                      border: Border(
+                                          top: BorderSide(color: Colors.white),
+                                          bottom:
+                                              BorderSide(color: Colors.white))),
                                   child: Center(
-                                    child: Text(name.characters.first.toUpperCase(),
-                                    style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white),),
+                                    child: Text(
+                                      name.characters.first.toUpperCase(),
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
                                   ),
                                 ),
-                                title: Text(groupmsg,style: TextStyle(color: Colors.white),),
-                                subtitle: Text(time,style:TextStyle(color:Colors.white)),
-                                trailing: Text(channelName,style: TextStyle(color: Colors.white,fontSize: 15),),
+                                title: Text(
+                                  groupmsg,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                subtitle: Text(time,
+                                    style: TextStyle(color: Colors.white)),
+                                trailing: Text(
+                                  channelName,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
                               ),
                             );
                           },

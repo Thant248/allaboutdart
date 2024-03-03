@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/constants.dart';
 import 'package:flutter_frontend/model/SessionStore.dart';
 import 'package:flutter_frontend/progression.dart';
-import 'package:flutter_frontend/screens/Login/login_screen.dart';
+import 'package:flutter_frontend/screens/Login/login_form.dart';
 import 'package:flutter_frontend/screens/Navigation/changePw.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
 import 'package:slide_to_act/slide_to_act.dart';
@@ -226,7 +226,7 @@ class _profileState extends State<profile> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const LoginScreen()));
+                                            const LoginForm()));
                               },
                             ))
                       ],
