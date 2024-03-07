@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/model/direct_message.dart';
 import 'package:flutter_frontend/model/user_management.dart';
 import 'package:flutter_frontend/services/directMessage/direct_message_api.dart';
-import 'package:flutter_frontend/services/userservice/user_management.dart';
+import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
+import 'package:flutter_frontend/services/userservice/usermanagement/user_management_service.dart';
+import 'package:dio/dio.dart';
 
 class DirectMessageProvider extends ChangeNotifier {
   // final DirectMessageService _service = DirectMessageService();
   bool isLoading = false;
   DirectMessages? directMessages;
-  final UserManagementService _userManagementService = UserManagementService();
+  final UserManagementService _userManagementService =
+      UserManagementService(Dio());
   UserManagement? userManagement;
 
   // Future<void> getAllMessages(int userId) async {
@@ -24,9 +27,9 @@ class DirectMessageProvider extends ChangeNotifier {
   Future getAllUsers() async {
     isLoading = true;
     notifyListeners();
-
-    final response = await _userManagementService.getAllUsers();
-     userManagement = response;
+    var token = await AuthController().getToken();
+    final response = await _userManagementService.getAllUser(token!);
+    userManagement = response;
     isLoading = false;
     notifyListeners();
   }

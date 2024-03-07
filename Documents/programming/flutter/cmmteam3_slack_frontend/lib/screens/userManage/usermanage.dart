@@ -4,8 +4,10 @@ import 'package:flutter_frontend/model/SessionStore.dart';
 import 'package:flutter_frontend/model/dataInsert/user_management_store.dart';
 import 'package:flutter_frontend/progression.dart';
 import 'package:flutter_frontend/services/directMessage/provider/direct_message_provider.dart';
-import 'package:flutter_frontend/services/userservice/user_management.dart';
+import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
+import 'package:flutter_frontend/services/userservice/usermanagement/user_management_service.dart';
 import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
 
 class UserManagement extends StatefulWidget {
   const UserManagement({Key? key});
@@ -20,10 +22,14 @@ class _UserManagementState extends State<UserManagement> {
   @override
   void initState() {
     super.initState();
-    userManagementService = UserManagementService();
+    userManagementService = UserManagementService(Dio());
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Provider.of<DirectMessageProvider>(context, listen: false).getAllUsers();
     });
+  }
+
+  Future<String?> getToken() async {
+    return await AuthController().getToken();
   }
 
   @override
@@ -31,14 +37,17 @@ class _UserManagementState extends State<UserManagement> {
     // int userLength = SessionStore.sessionData!.mUsers!.length.toInt();
     int? userId;
 
-    
     return Scaffold(
       backgroundColor: const Color(0xFF92AFE6),
       appBar: AppBar(
         backgroundColor: const Color(0xFF3860EF),
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Nav(),
+                ));
           },
           child: const Icon(Icons.arrow_back),
         ),
@@ -109,7 +118,9 @@ class _UserManagementState extends State<UserManagement> {
                             setState(() {
                               userId = userIds;
                             });
-                            await userManagementService.deactivateUser(userId!);
+                            var token = await  getToken();
+                            await userManagementService.deactivateUser(
+                                userId!, token!);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

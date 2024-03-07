@@ -23,8 +23,6 @@ class AuthController {
       final Map<String, dynamic> data = json.decode(response);
       final String token = data['token'];
       await saveToken(token.toString());
-      print('printing');
-      print(token);
       return token;
     } catch (e) {
       throw e;

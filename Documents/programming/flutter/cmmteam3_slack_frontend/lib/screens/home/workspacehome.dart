@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/componnets/Nav.dart';
 import 'package:flutter_frontend/constants.dart';
@@ -19,14 +21,14 @@ import 'package:flutter_frontend/screens/unreadMessage/unread_msg.dart';
 import 'package:flutter_frontend/screens/userManage/usermanage.dart';
 import 'package:flutter_frontend/services/mChannelService/m_channel_services.dart';
 import 'package:flutter_frontend/services/mentionlistsService/mention_list.service.dart';
-import 'package:flutter_frontend/services/starlistsService/retrofit/star_list.service.dart';
-import 'package:flutter_frontend/services/threadMessages/retrofit/thread_message_service.dart';
-import 'package:flutter_frontend/services/unreadMessages/retrofit/unread_message_services.dart';
+import 'package:flutter_frontend/services/starlistsService/star_list.service.dart';
+import 'package:flutter_frontend/services/threadMessages/thread_message_service.dart';
+import 'package:flutter_frontend/services/unreadMessages/unread_message_services.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
 import 'package:flutter_frontend/services/userservice/mainpage/mian_page.dart';
-import 'package:flutter_frontend/services/userservice/user_management.dart';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_frontend/services/userservice/usermanagement/user_management_service.dart';
 
 class WorkHome extends StatefulWidget {
   const WorkHome({Key? key}) : super(key: key);
@@ -68,6 +70,7 @@ class _WorkHomeState extends State<WorkHome> with RouteAware {
           SessionData data = snapshot.data!;
           String currentName = data.currentUser!.name.toString();
           int channelLength = data.mPChannels!.length;
+          int channelLengths = data.mChannels!.length;
           int workSpaceUserLength = data.mUsers!.length;
           return Scaffold(
             backgroundColor: Color.fromARGB(255, 246, 255, 255),
@@ -221,8 +224,7 @@ class _WorkHomeState extends State<WorkHome> with RouteAware {
                                         onWillPop: () async => true);
                                   },
                                 );
-                                await UserManagementService().getAllUsers();
-                                // ignore: use_build_context_synchronously
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -264,11 +266,53 @@ class _WorkHomeState extends State<WorkHome> with RouteAware {
                                     height: 150,
                                     child: ListView.builder(
                                       shrinkWrap: true,
+                                      itemCount: channelLengths,
+                                      itemBuilder: (context, index) {
+                                        final channel = data.mChannels![index];
+                                        var mpChannel = data.mPChannels;
+                                        var mChannel = data.mChannels;
+
+                                        return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          groupMessage(
+                                                            channelID:
+                                                                channel.id,
+                                                            channelStatus: channel
+                                                                .channelStatus,
+                                                            channelName: channel
+                                                                .channelName,
+                                                          )));
+                                            },
+                                            child: ListTile(
+                                              leading: channel.channelStatus!
+                                                  ? const Icon(Icons.tag)
+                                                  : const Icon(Icons.lock),
+                                              title: Text(
+                                                channel.channelName ?? '',
+                                                style: const TextStyle(
+                                                    color: kPrimaryTextColor),
+                                              ),
+                                            ));
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    height: 150,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
                                       itemCount: channelLength,
                                       itemBuilder: (context, index) {
                                         final channel = data.mPChannels![index];
                                         var mpChannel = data.mPChannels;
                                         var mChannel = data.mChannels;
+
                                         bool isEquals = mChannel!.any((m) =>
                                             m.id == mpChannel![index].id);
 

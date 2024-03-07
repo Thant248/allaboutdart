@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/componnets/Nav.dart';
 import 'package:flutter_frontend/constants.dart';
 import 'package:flutter_frontend/model/MentionLists.dart';
 import 'package:flutter_frontend/model/StarLists.dart';
@@ -18,11 +19,10 @@ class StarBody extends StatefulWidget {
 class _StarBodyState extends State<StarBody> {
   int? isSelected = 1;
   static List<Widget> pages = [
-    
-  const DirectStars(),
-  const DirectThreadStars(),
-  const GroupStarWidget(),
-  const GroupThreadStar()
+    const DirectStars(),
+    const DirectThreadStars(),
+    const GroupStarWidget(),
+    const GroupThreadStar()
   ];
 
   @override
@@ -37,7 +37,7 @@ class _StarBodyState extends State<StarBody> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const WorkHome()),
+              MaterialPageRoute(builder: (context) => const Nav()),
             );
           },
           icon: const Icon(Icons.arrow_back),

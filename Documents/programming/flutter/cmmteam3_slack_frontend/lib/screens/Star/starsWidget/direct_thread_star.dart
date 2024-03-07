@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/model/SessionStore.dart';
 import 'package:flutter_frontend/model/dataInsert/star_list.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_frontend/services/starlistsService/retrofit/star_list.service.dart';
+import 'package:flutter_frontend/services/starlistsService/star_list.service.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 

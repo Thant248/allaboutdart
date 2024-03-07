@@ -120,19 +120,19 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                   widget.receiverName.isNotEmpty
                       ? "${widget.receiverName.characters.first.toUpperCase()}"
                       : "",
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),
-            SizedBox(width: 20),
+           const  SizedBox(width: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "${widget.receiverName}",
-                  style: TextStyle(fontSize: 16),
+                  style: const  TextStyle(fontSize: 16),
                 ),
-                Text(
+                const Text(
                   "Active 3m ago",
                   style: TextStyle(fontSize: 12),
                 )
@@ -145,7 +145,7 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
         stream: _controller.stream,
         builder: (context, snapshot) {
           if (snapshot.hasError || !snapshot.hasData) {
-            return ProgressionBar(
+            return const  ProgressionBar(
               imageName: 'dataSending.json',
               height: 200,
               size: 200,

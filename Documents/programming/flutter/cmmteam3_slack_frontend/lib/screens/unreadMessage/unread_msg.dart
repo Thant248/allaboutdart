@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/componnets/Nav.dart';
 import 'package:flutter_frontend/constants.dart';
 import 'package:flutter_frontend/screens/unreadMessage/unreadWidget/un_read_gp.dart';
 import 'package:flutter_frontend/screens/unreadMessage/unreadWidget/un_read_msg.dart';
@@ -29,7 +30,7 @@ class _unreadMessageState extends State<unreadMessage> {
         backgroundColor: navColor, // Corrected typo here
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder:(context) => const Nav(),));
           },
           icon: const Icon(Icons.arrow_back),
         ),
