@@ -12,5 +12,6 @@ abstract class UserManagementService {
   Future<UserManagement> getAllUser(@Header('Authorization') String token);
 
   @GET('http://127.0.0.1:8001/update')
-  Future<String> deactivateUser(@Query('id') int userID, @Header('Authorization') String token);
+  Future<String> deactivateUser(
+      @Query('id') int userID, @Header('Authorization') String token);
 }

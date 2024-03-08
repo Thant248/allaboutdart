@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_frontend/model/dataInsert/unread_list.dart';
 
-
 class unReadDirectThread extends StatefulWidget {
   const unReadDirectThread({Key? key}) : super(key: key);
 
@@ -11,29 +10,27 @@ class unReadDirectThread extends StatefulWidget {
 }
 
 class _unReadDirectThreadState extends State<unReadDirectThread> {
-  
   var snapshot = UnreadStore.unreadMsg;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child:  Column(
+        body: SingleChildScrollView(
+            child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
                   children: [
                     Expanded(
                       child: ListView.builder(
                           itemCount: snapshot!.unreadThreads!.length,
                           itemBuilder: (context, index) {
-                            String d_message_name = snapshot
-                                !.unreadThreads![index].name
+                            String d_message_name =
+                                snapshot!.unreadThreads![index].name.toString();
+                            String d_message = snapshot!
+                                .unreadThreads![index].directthreadmsg
                                 .toString();
-                            String d_message = snapshot
-                                !.unreadThreads![index].directthreadmsg
-                                .toString();
-                            String d_message_t = snapshot
-                                !.unreadThreads![index].created_at
+                            String d_message_t = snapshot!
+                                .unreadThreads![index].created_at
                                 .toString();
                             DateTime time = DateTime.parse(d_message_t);
                             String created_at =
@@ -54,15 +51,15 @@ class _unReadDirectThreadState extends State<unReadDirectThread> {
                                 children: [
                                   Text(
                                     d_message_name,
-                                    style:
-                                      const  TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                const  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   Text(
                                     created_at,
-                                    style: const  TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 10,
                                         color: Color.fromARGB(143, 0, 0, 0)),
                                   )
@@ -76,5 +73,5 @@ class _unReadDirectThreadState extends State<unReadDirectThread> {
                     ),
                   ],
                 ))));
-              }
+  }
 }

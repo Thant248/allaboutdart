@@ -2,34 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_frontend/model/SessionStore.dart';
-import 'package:flutter_frontend/model/direct_message.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_frontend/services/directMessage/retrofit/direct_meessages.dart';
+import 'package:dio/dio.dart';
 
 class DirectMessageService {
-  Future<DirectMessages> getAllDirectMessages(int userId) async {
-    final String url = "http://localhost:8001/show/$userId";
-
-    try {
-      final token = await AuthController().getToken();
-      var response = await http.get(Uri.parse(url), headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      });
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        DirectMessages directMessage = DirectMessages.fromJson(data);
-        return directMessage;
-      } else {
-        throw Exception('message not founded');
-      }
-    } catch (e) {
-      throw e;
-    }
-  }
-
+  final _apiSerive = ApiService(Dio());
   Future<void> sendDirectMessage(int receiverUserId, String message) async {
-    String url = "http://127.0.0.1:8001/directmsg";
     int currentUserId = SessionStore.sessionData!.currentUser!.id!.toInt();
     Map<String, dynamic> requestBody = {
       "message": message,
@@ -39,19 +19,9 @@ class DirectMessageService {
 
     try {
       var token = await AuthController().getToken();
-      var response = await http.post(Uri.parse(url),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-          },
-          body: jsonEncode(requestBody));
-      if (response.statusCode == 200) {
-        print('message has been sent successfully');
-      } else {
-        print('${response.statusCode}');
-      }
+      await _apiSerive.sendMessage(requestBody, token!);
     } catch (e) {
-      print('error');
+      throw e;
     }
   }
 
@@ -85,23 +55,11 @@ class DirectMessageService {
 
   Future<void> directStarMsg(int receiveUserId, int messageId) async {
     int currentUserId = SessionStore.sessionData!.currentUser!.id!.toInt();
-    String url =
-        "http://127.0.0.1:8001/star?user_id=$currentUserId?id=$messageId?s_user_id=$receiveUserId";
 
     try {
       var token = await AuthController().getToken();
-      var response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-      );
-      if (response.statusCode == 200) {
-        print('message has been sent successfully');
-      } else {
-        print('${response.statusCode}');
-      }
+      await _apiSerive.directStarMsg(
+          currentUserId, messageId, receiveUserId, token!);
     } catch (e) {
       print('error');
     }

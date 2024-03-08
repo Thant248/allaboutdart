@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/model/direct_message.dart';
 import 'package:flutter_frontend/model/user_management.dart';
-import 'package:flutter_frontend/services/directMessage/direct_message_api.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
 import 'package:flutter_frontend/services/userservice/usermanagement/user_management_service.dart';
 import 'package:dio/dio.dart';

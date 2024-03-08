@@ -31,14 +31,9 @@ class _MemberInvitationState extends State<MemberInvitation> {
       setState(() {
         _isSendingEmail = true;
       });
-      await MemberInviteService().memberInvite(email, channelId);
+      await MemberInviteServices().memberInvite(email, channelId);
       // Navigate to home screen after successful invitation
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const WorkHome(),
-        ),
-      );
+      Navigator.pop(context);
     } catch (e) {
       // Handle errors here
       print('Error: $e');

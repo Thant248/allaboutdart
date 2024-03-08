@@ -12,9 +12,7 @@ class _ApiService implements ApiService {
   _ApiService(
     this._dio, {
     this.baseUrl,
-  }) {
-    baseUrl ??= 'http://localhost:8001/show';
-  }
+  });
 
   final Dio _dio;
 
@@ -38,7 +36,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/${userId}',
+              'http://localhost:8001/show/${userId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -49,6 +47,35 @@ class _ApiService implements ApiService {
             ))));
     final value = DirectMessages.fromJson(_result.data!);
     return value;
+  }
+
+  @override
+  Future<void> sendMessage(
+    Map<String, dynamic> requestBody,
+    String token,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(requestBody);
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          'http://127.0.0.1:8001/directmsg',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
@@ -79,5 +106,11 @@ class _ApiService implements ApiService {
     }
 
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
+  }
+  
+  @override
+  Future<void> directStarMsg(int user_id, int messageId, int receiveUserId, String token) {
+    // TODO: implement directStarMsg
+    throw UnimplementedError();
   }
 }

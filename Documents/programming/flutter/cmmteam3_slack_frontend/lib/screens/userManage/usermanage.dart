@@ -121,6 +121,7 @@ class _UserManagementState extends State<UserManagement> {
                             var token = await  getToken();
                             await userManagementService.deactivateUser(
                                 userId!, token!);
+                            // ignore: use_build_context_synchronously
                             Navigator.push(
                               context,
                               MaterialPageRoute(

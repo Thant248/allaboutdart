@@ -1,17 +1,15 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter_frontend/model/SessionStore.dart';
-import 'package:flutter_frontend/services/memberinvite/member_invite_service.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_frontend/services/memberinvite/member_invite.dart';
+import 'package:dio/dio.dart';
 
-class MemberInviteService {
+class MemberInviteServices{
+  final _apiService = MemberInviteService(Dio());
   Future<void> memberInvite(String email, int channelID) async {
-    final _apiService = MemberInviteServices(Dio());
     int workSpace = SessionStore.sessionData!.mWorkspace!.id!.toInt();
     try {
       var token = await AuthController().getToken();
+
       Map<String, dynamic> requestBody = {
         "m_invite": {
           "email": email,
@@ -19,8 +17,11 @@ class MemberInviteService {
           "workspace_id": workSpace
         }
       };
-     await _apiService.memberinvite(token!, requestBody);  
+      await _apiService.memberinvitation(token!, requestBody);
+     
+     print('Member has been successfully invited!'); 
     } catch (e) {
+      print("Error in createUser: $e");
       throw e;
     }
   }
