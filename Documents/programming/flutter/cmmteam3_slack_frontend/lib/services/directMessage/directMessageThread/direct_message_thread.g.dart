@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'direct_meessages.dart';
+part of 'direct_message_thread.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'direct_meessages.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _ApiService implements ApiService {
-  _ApiService(
+class _DirectMsgThreadService implements DirectMsgThreadService {
+  _DirectMsgThreadService(
     this._dio, {
     this.baseUrl,
   });
@@ -19,8 +19,8 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<DirectMessages> getAllDirectMessages(
-    int userId,
+  Future<DirectMessageThread> getAllThread(
+    int directMsgid,
     String token,
   ) async {
     final _extra = <String, dynamic>{};
@@ -28,15 +28,15 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<DirectMessages>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<DirectMessageThread>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              'http://localhost:8001/show/${userId}',
+              'http://127.0.0.1:8001/directhread/${directMsgid}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,12 +45,12 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = DirectMessages.fromJson(_result.data!);
+    final value = DirectMessageThread.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<void> sendMessage(
+  Future<String> sentThread(
     Map<String, dynamic> requestBody,
     String token,
   ) async {
@@ -60,14 +60,14 @@ class _ApiService implements ApiService {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(requestBody);
-    await _dio.fetch<void>(_setStreamType<void>(Options(
+    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          'http://127.0.0.1:8001/directmsg',
+          'http://127.0.0.1:8001/directthreadmsg',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -76,20 +76,24 @@ class _ApiService implements ApiService {
           _dio.options.baseUrl,
           baseUrl,
         ))));
+    final value = _result.data!;
+    return value;
   }
 
   @override
-  Future<void> directStarMsg(
-    int s_user_id,
-    int messageId,
-    int currentUserId,
+  Future<void> starThread(
+    int receiveId,
+    int currentUserid,
+    int threadId,
+    int directMessageId,
     String token,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r's_user_id': s_user_id,
-      r'id': messageId,
-      r'user_id': currentUserId,
+      r's_user_id': receiveId,
+      r'user_id': currentUserid,
+      r'id': threadId,
+      r's_direct_message_id': directMessageId,
     };
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
@@ -101,7 +105,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          'http://127.0.0.1:8001/star',
+          'http://127.0.0.1:8001/starthread',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -113,12 +117,20 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> directUnStarMsg(
-    int starId,
+  Future<void> unstarThread(
+    int directMsgId,
+    int receiveId,
+    int threadId,
+    int userId,
     String token,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'id': starId};
+    final queryParameters = <String, dynamic>{
+      r's_direct_message_id': directMsgId,
+      r's_user_id': receiveId,
+      r'id': threadId,
+      r'user_id': userId,
+    };
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
@@ -129,7 +141,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          'http://127.0.0.1:8001/unstar',
+          'http://127.0.0.1:8001/unstarthread',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -141,12 +153,18 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> deleteMessage(
-    int msgId,
+  Future<void> deleteThread(
+    int directMsgId,
+    int receiveUserId,
+    int threadId,
     String token,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'id': msgId};
+    final queryParameters = <String, dynamic>{
+      r's_direct_message_id': directMsgId,
+      r's_user_id': receiveUserId,
+      r'id': threadId,
+    };
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
@@ -157,7 +175,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          'http://127.0.0.1:8001/delete_directmsg',
+          'http://127.0.0.1:8001/delete_directthread',
           queryParameters: queryParameters,
           data: _data,
         )

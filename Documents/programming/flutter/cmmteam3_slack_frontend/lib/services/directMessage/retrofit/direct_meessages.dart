@@ -17,6 +17,19 @@ abstract class ApiService {
       @Header('Authorization') String token);
 
   @GET('http://127.0.0.1:8001/star')
-  Future<void> directStarMsg(@Query("user_id") int user_id,
-      @Query("id") int messageId, @Query("s_user_id") int receiveUserId, @Header('Authorization') String token);
+  Future<void> directStarMsg(
+      @Query("s_user_id") int s_user_id,
+      @Query("id") int messageId,
+      @Query("user_id") int currentUserId,
+      @Header('Authorization') String token);
+
+  @GET('http://127.0.0.1:8001/unstar')
+  Future<void> directUnStarMsg(
+      @Query("id") int starId, @Header('Authorization') String token);
+
+  @GET('http://127.0.0.1:8001/delete_directmsg')
+  Future<void> deleteMessage(
+      @Query("id") int msgId, @Header('Authorization') String token);
+
+
 }

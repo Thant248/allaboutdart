@@ -5,6 +5,7 @@ import 'package:flutter_frontend/constants.dart';
 import 'package:flutter_frontend/model/SessionStore.dart';
 import 'package:flutter_frontend/model/direct_message.dart';
 import 'package:flutter_frontend/progression.dart';
+import 'package:flutter_frontend/screens/directThreadMessage/direct_message_thread.dart';
 import 'package:flutter_frontend/services/directMessage/direct_message_api.dart';
 
 import 'package:dio/dio.dart';
@@ -46,10 +47,12 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
   int? selectUserId;
 
   late Timer _timer;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+
     _startTimer();
   }
 
@@ -58,6 +61,7 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
     _timer.cancel();
     _controller.close();
     messageTextController.dispose();
+
     super.dispose();
   }
 
@@ -167,14 +171,18 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                       itemCount: directMessage,
                       itemBuilder: (context, index) {
                         var channelStar = directMessages.tDirectMessages;
-                        var stared = directMessages.tDirectStarMsgids;
+                        List<int> tempStar =
+                            directMessages.tDirectStarMsgids!.toList();
+
                         bool isStared =
-                            channelStar!.any((element) => element.id == stared);
+                            tempStar.contains(channelStar![index].id);
 
                         String message = directMessages
                             .tDirectMessages![index].directmsg!
                             .toString();
-                        String messageedUser =  directMessages.tDirectMessages![index].name.toString();
+                        String messageedUser = directMessages
+                            .tDirectMessages![index].name
+                            .toString();
                         String time = directMessages
                             .tDirectMessages![index].createdAt
                             .toString();
@@ -187,7 +195,8 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                         return InkWell(
                           onTap: () {
                             setState(() {
-                              _selectedMessageIndex = index;
+                              _selectedMessageIndex =
+                                  directMessages.tDirectMessages![index].id;
                               isSelected = !isSelected;
                             });
                           },
@@ -202,8 +211,11 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        if (_selectedMessageIndex == index &&
-                                            isSelected == true)
+                                        if (_selectedMessageIndex ==
+                                                directMessages
+                                                    .tDirectMessages![index]
+                                                    .id &&
+                                            !isSelected)
                                           Align(
                                             child: Container(
                                               padding:
@@ -222,12 +234,29 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                                           .spaceEvenly,
                                                   children: [
                                                     IconButton(
-                                                      onPressed: () {},
+                                                      onPressed: () async {
+                                                        await directMessageService
+                                                            .deleteMsg(
+                                                                _selectedMessageIndex!);
+                                                      },
                                                       icon: Icon(Icons.delete),
                                                       color: Colors.red,
                                                     ),
                                                     IconButton(
-                                                      onPressed: () {},
+                                                      onPressed: () async {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (_) => DirectMessageThreadWiget(
+                                                                    receiverId:
+                                                                        widget
+                                                                            .userId,
+                                                                    directMsgId:
+                                                                        _selectedMessageIndex!,
+                                                                    receiverName:
+                                                                        widget
+                                                                            .receiverName)));
+                                                      },
                                                       icon: const Icon(
                                                           Icons.reply),
                                                       color:
@@ -237,16 +266,21 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                                     IconButton(
                                                       icon: Icon(
                                                         Icons.star,
-                                                        color: isStarred ||
-                                                                isStared
-                                                            ? Colors.amber
+                                                        color: isStared
+                                                            ? Colors.yellow
                                                             : Colors.grey,
                                                       ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          isStarred =
-                                                              !isStarred;
-                                                        });
+                                                      onPressed: () async {
+                                                        if (isStared) {
+                                                          await directMessageService
+                                                              .directUnStarMsg(
+                                                                  _selectedMessageIndex!);
+                                                        } else {
+                                                          await directMessageService
+                                                              .directStarMsg(
+                                                                  widget.userId,
+                                                                  _selectedMessageIndex!);
+                                                        }
                                                       },
                                                     ),
                                                   ],
@@ -254,7 +288,6 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                               ),
                                             ),
                                           ),
-
                                         Container(
                                           constraints: const BoxConstraints(
                                               maxWidth: 200),
@@ -292,15 +325,6 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                             ),
                                           ),
                                         ),
-                                        isLoading
-                                            ? const Icon(
-                                                Icons.star,
-                                                color: Color.fromARGB(
-                                                    255, 228, 191, 25),
-                                              )
-                                            : Container(),
-
-                                        // Spacer(),
                                       ],
                                     )
                                   else
@@ -345,8 +369,11 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                           ),
                                         ),
 
-                                        if (_selectedMessageIndex == index &&
-                                            isSelected == true)
+                                        if (_selectedMessageIndex ==
+                                                directMessages
+                                                    .tDirectMessages![index]
+                                                    .id &&
+                                            !isSelected)
                                           Align(
                                             child: Container(
                                               padding:
@@ -367,16 +394,21 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                                     IconButton(
                                                       icon: Icon(
                                                         Icons.star,
-                                                        color: isStarred ||
-                                                                isStared
-                                                            ? Colors.amber
+                                                        color: isStared
+                                                            ? Colors.yellow
                                                             : Colors.grey,
                                                       ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          isStarred =
-                                                              !isStarred;
-                                                        });
+                                                      onPressed: () async {
+                                                        if (isStared) {
+                                                          await directMessageService
+                                                              .directUnStarMsg(
+                                                                  _selectedMessageIndex!);
+                                                        } else {
+                                                          await directMessageService
+                                                              .directStarMsg(
+                                                                  widget.userId,
+                                                                  _selectedMessageIndex!);
+                                                        }
                                                       },
                                                     ),
                                                     IconButton(
@@ -388,7 +420,11 @@ class _DirectMessageWidgetState extends State<DirectMessageWidget>
                                                               255, 15, 15, 15),
                                                     ),
                                                     IconButton(
-                                                      onPressed: () {},
+                                                      onPressed: () async {
+                                                        await directMessageService
+                                                            .deleteMsg(
+                                                                _selectedMessageIndex!);
+                                                      },
                                                       icon: const Icon(
                                                           Icons.delete),
                                                       color: Colors.red,

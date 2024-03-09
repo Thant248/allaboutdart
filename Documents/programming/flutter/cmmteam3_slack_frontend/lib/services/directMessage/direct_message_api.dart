@@ -59,9 +59,25 @@ class DirectMessageService {
     try {
       var token = await AuthController().getToken();
       await _apiSerive.directStarMsg(
-          currentUserId, messageId, receiveUserId, token!);
+          receiveUserId, messageId, currentUserId, token!);
     } catch (e) {
-      print('error');
+      throw e;
     }
+  }
+
+  Future<void> directUnStarMsg(int starId) async {
+    try {
+      var token = await AuthController().getToken();
+      await _apiSerive.directUnStarMsg(starId, token!);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> deleteMsg(int msgId) async {
+    try {
+      var token = await AuthController().getToken();
+      await _apiSerive.deleteMessage(msgId, token!);
+    } catch (e) {}
   }
 }
