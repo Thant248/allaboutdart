@@ -5,7 +5,7 @@ class ApiSerices {
   final _apiSerive = ConfirmService(Dio());
 
   Future<String> confirmUser(String password, String confirmPassword,
-      String name, String email, int profileImage, int workspaceName) async {
+      String name, String email, String profileImage, String workspaceName) async {
     Map<String, dynamic> requestBody = {
       "m_user": {
         "remember_digest": workspaceName,

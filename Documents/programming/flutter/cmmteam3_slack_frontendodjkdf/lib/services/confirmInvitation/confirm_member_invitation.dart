@@ -8,9 +8,9 @@ class MemberInvitation {
       String password,
       String confirmPassword,
       String name,
+      String email,
       int channelId,
-      int workSpaceId,
-      String email) async {
+      int workSpaceId) async {
     try {
       Map<String, dynamic> requestBody = {
         "m_user": {

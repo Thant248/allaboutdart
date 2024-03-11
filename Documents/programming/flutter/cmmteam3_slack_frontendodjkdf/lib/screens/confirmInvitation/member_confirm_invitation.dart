@@ -1,36 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:goroute/service/confirm_serv.dart';
-
-void main() {
-  setUrlStrategy(PathUrlStrategy());
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text('Confirm Invitation'),
-        ),
-      ),
-    );
-  }
-}
+import 'package:flutter_frontend/screens/Login/login_form.dart';
+import 'package:flutter_frontend/services/confirmInvitation/confirm_member_invitation.dart';
+import 'package:flutter_frontend/services/memberinvite/MemberInvite.dart';
 
 class ConfirmPage extends StatelessWidget {
   final int? channelId;
@@ -43,28 +14,26 @@ class ConfirmPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final _apiSerive = ApiSerices();
+    final _apiSerive = MemberInvitation();
 
     String? _name;
     String? _password;
     String? _confirmpassword;
 
-    String fakechannel = "thants";
-    String fakeWs = "Missions";
     void _submitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
 
         try {
-          _apiSerive.confirmUser(
+          _apiSerive.memberInvitationConfirm(
               _password.toString(),
               _confirmpassword.toString(),
               _name.toString(),
               email!,
-              fakechannel,
-              fakeWs!);
+              channelId!,
+              workspaceid!);
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => HomePage()));
+              context, MaterialPageRoute(builder: (_) => const LoginForm()));
 
           // Handle successful confirmation, navigate to another page, etc.
         } catch (e) {
@@ -144,7 +113,7 @@ class ConfirmPage extends StatelessWidget {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  _submitForm();
+                   _submitForm();
                 },
                 style: ButtonStyle(
                   backgroundColor:
@@ -159,27 +128,3 @@ class ConfirmPage extends StatelessWidget {
     );
   }
 }
-
-final GoRouter _router = GoRouter(
-  initialLocation: '/home', // Initial route
-  routes: [
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => HomePage(),
-    ),
-    GoRoute(
-      path: '/confirminvitation',
-      builder: (context, state) {
-        final channelId = int.tryParse(state.queryParams['channelid'] ?? '');
-        final email = state.queryParams['email'];
-        final workspaceid =
-            int.tryParse(state.queryParams['workspaceid'] ?? '');
-        return ConfirmPage(
-          channelId: channelId,
-          email: email,
-          workspaceid: workspaceid,
-        );
-      },
-    ),
-  ],
-);
