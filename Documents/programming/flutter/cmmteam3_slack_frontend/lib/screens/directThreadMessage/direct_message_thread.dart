@@ -8,7 +8,6 @@ import 'package:flutter_frontend/constants.dart';
 import 'package:flutter_frontend/model/SessionStore.dart';
 import 'package:flutter_frontend/model/direct_message_thread.dart';
 import 'package:flutter_frontend/progression.dart';
-import 'package:flutter_frontend/screens/directMessage/direct_message.dart';
 import 'package:flutter_frontend/services/directMessage/directMessageThread/direct_message_thread.dart';
 import 'package:flutter_frontend/services/userservice/api_controller_service.dart';
 

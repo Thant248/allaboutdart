@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/constants.dart';
 import 'package:flutter_frontend/screens/Welcome/welcome_screen.dart';
-import 'package:flutter_frontend/screens/confirmPage/member_invite_confirm.dart';
-
+import 'package:flutter_frontend/screens/confirmInvitation/member_confirm_invitation.dart';
 import 'package:flutter_frontend/services/directMessage/provider/direct_message_provider.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:provider/provider.dart';
-
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  setUrlStrategy(PathUrlStrategy());
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -58,23 +60,26 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final GoRouter _router = GoRouter(initialLocation: '/', routes: [
-  GoRoute(
-    path: '/',
-    builder: (context, state) => const WelcomeScreen(),
-  ),
-  GoRoute(
+final GoRouter _router = GoRouter(
+  initialLocation: '/', // Initial route
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const WelcomeScreen(),
+    ),
+    GoRoute(
       path: '/confirminvitation',
       builder: (context, state) {
         final channelId = int.tryParse(state.queryParams['channelid'] ?? '');
         final email = state.queryParams['email'];
         final workspaceid =
             int.tryParse(state.queryParams['workspaceid'] ?? '');
-        return MemberConfirm(
-          channelId: channelId!,
-          email: email!,
-          workspaceid: workspaceid!,
+        return ConfirmPage(
+          channelId: channelId,
+          email: email,
+          workspaceid: workspaceid,
         );
       },
     ),
-]);
+  ],
+);
