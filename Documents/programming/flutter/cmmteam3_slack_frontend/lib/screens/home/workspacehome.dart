@@ -51,8 +51,11 @@ class _WorkHomeState extends State<WorkHome> with RouteAware {
     }
 
     return FutureBuilder(
-      future:
-          getToken().then((value) => MainPageService(Dio()).mainPage(value!)),
+      future: getToken().then((value) => MainPageService(Dio(BaseOptions(
+              headers: {
+                "Content-type": "application/json",
+                "Accept": "application/json"
+              }))).mainPage(value!)),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {

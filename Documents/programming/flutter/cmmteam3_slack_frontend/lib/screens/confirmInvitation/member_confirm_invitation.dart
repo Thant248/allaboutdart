@@ -36,7 +36,7 @@ class ConfirmPage extends StatelessWidget {
               name.toString(),
               email!,
               channelName!,
-              workspaceid!);
+              workspaceName!);
           Navigator.push(
               context, MaterialPageRoute(builder: (_) => const LoginForm()));
         } catch (e) {
@@ -48,7 +48,7 @@ class ConfirmPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Confirm Invitation')),
       body: FutureBuilder<Confirm>(
-          future: ConfirmInvitationService(Dio())
+          future: ConfirmInvitationService(Dio(BaseOptions(headers: {"Content-type": "application/json", "Accept": "application/json"})))
               .getConfirmData(channelId!, email!, workspaceid!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

@@ -6,10 +6,10 @@ import 'package:flutter_frontend/services/directMessage/provider/direct_message_
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+// import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
-  setUrlStrategy(PathUrlStrategy());
+  // setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
 }
 

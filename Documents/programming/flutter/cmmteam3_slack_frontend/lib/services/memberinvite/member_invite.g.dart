@@ -13,7 +13,7 @@ class _MemberInviteService implements MemberInviteService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://127.0.0.1:8001/memberinvite';
+    baseUrl ??= 'http://192.168.100.100:8001/memberinvite';
   }
 
   final Dio _dio;

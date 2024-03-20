@@ -1,4 +1,4 @@
-import 'dart:js_util';
+
 import 'package:flutter_frontend/model/star_lists_model.dart';
 import 'package:flutter_frontend/model/thread_model.dart';
 

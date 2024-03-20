@@ -32,7 +32,7 @@ class _ConfirmInvitationService implements ConfirmInvitationService {
     )
         .compose(
           _dio.options,
-          'http://127.0.0.1:8001/m_users',
+          'http://192.168.100.100:8001/m_users',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -65,7 +65,7 @@ class _ConfirmInvitationService implements ConfirmInvitationService {
     )
             .compose(
               _dio.options,
-              'http://127.0.0.1:8001/confirminvitation',
+              'http://192.168.100.100:8001/confirminvitation',
               queryParameters: queryParameters,
               data: _data,
             )

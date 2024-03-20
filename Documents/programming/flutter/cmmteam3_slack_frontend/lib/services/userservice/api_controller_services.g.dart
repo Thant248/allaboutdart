@@ -13,7 +13,7 @@ class _LoginService implements LoginService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://127.0.0.1:8001/login';
+    baseUrl ??= 'http://192.168.100.100:8001/login';
   }
 
   final Dio _dio;

@@ -10,7 +10,7 @@ class MemberInvitation {
       String name,
       String email,
       String channelId,
-      int workSpaceId) async {
+      String workSpaceId) async {
     try {
       Map<String, dynamic> requestBody = {
         "m_user": {

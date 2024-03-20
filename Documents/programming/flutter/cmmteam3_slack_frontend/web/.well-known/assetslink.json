@@ -1,0 +1,14 @@
+[
+    {
+        "realtions": [
+            "delegrate_permission/common.handle_all_urls"
+        ], 
+        "target": {
+            "namespace": "android_app", 
+            "package_name": "com.example.unilinks_flutter_app", 
+            "sha256_cert_fingerprints": [
+                "5F:2A:2A:45:A9:A8:93:49:22:EB:99:9C:73:13:83:12:27:AE:17:44:B6:78:E7:56:C2:4A:7C:4C:B0:14:16:5B"
+            ]
+        }
+    }
+]
