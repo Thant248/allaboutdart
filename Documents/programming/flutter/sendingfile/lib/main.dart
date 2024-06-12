@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 
 void main() {
@@ -17,9 +18,10 @@ class FilePickerExample extends StatefulWidget {
 
 class _FilePickerExampleState extends State<FilePickerExample> {
   String? fileText;
+  String? mimeType;
 
   final List<PlatformFile> files = [];
-  final ValueChanged<PlatformFile> onOpenFile =(value) => null;
+  final ValueChanged<PlatformFile> onOpenFile = (value) => null;
 
   Future<void> _pickMultipleFiles() async {
     try {
@@ -40,6 +42,10 @@ class _FilePickerExampleState extends State<FilePickerExample> {
         fileText = 'Error picking files: $e';
       });
     }
+
+    mimeType = await lookupMimeType(fileText.toString());
+    print("+=========================================================");
+    print(mimeType);
   }
 
   void viewFile(PlatformFile file) {
@@ -70,6 +76,7 @@ class _FilePickerExampleState extends State<FilePickerExample> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text("$mimeType"),
                 ElevatedButton(
                   onPressed: _pickMultipleFiles,
                   child: const Text('Pick Multiple Files'),
